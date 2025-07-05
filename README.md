@@ -19,6 +19,7 @@ When run, the script prompts for up to six pattern rows. Each row is a five-char
 - `Y` for yellow/orange (correct letter, wrong position)
 - `X` for gray/dark (letter not present)
 
+
 Press Enter on an empty line to stop entering patterns. For every row provided, a possible guess is printed.
 
 A word list is required to generate guesses. By default `words.txt` is used (included in this repo). You can specify a different list with `--words PATH`.
