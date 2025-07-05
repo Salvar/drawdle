@@ -10,6 +10,7 @@ The `drawdle.py` script reads a secret answer and a set of color patterns and fi
 
 ```
 python drawdle.py ANSWER
+
 ```
 
 When run, the script prompts for up to six pattern rows. Each row is a five-character string using:
@@ -18,10 +19,8 @@ When run, the script prompts for up to six pattern rows. Each row is a five-char
 - `Y` for yellow/orange (correct letter, wrong position)
 - `X` for gray/dark (letter not present)
 
-Press Enter on an empty line to stop entering patterns. For every row provided,
-a possible guess is printed. Before checking candidates, the program performs a
-quick filter using the known letter positions and counts to prune words that
-cannot possibly match the requested pattern.
+
+Press Enter on an empty line to stop entering patterns. For every row provided, a possible guess is printed.
 
 A word list is required to generate guesses. By default `words.txt` is used (included in this repo). You can specify a different list with `--words PATH`.
 
@@ -29,6 +28,7 @@ A word list is required to generate guesses. By default `words.txt` is used (inc
 
 ```
 $ python drawdle.py crane
+
 Enter up to 6 pattern rows (5 chars each). Use G for green, Y for yellow/orange, X for gray. Blank line to stop.
 Row 1: XGYXX
 Row 2:

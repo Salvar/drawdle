@@ -25,7 +25,6 @@ def color_row(answer, guess):
             answer_chars[idx] = None
     return colors
 
-
 def pre_filter(words, answer, pattern):
     answer = answer.lower()
     pattern = [c.upper() for c in pattern]
