@@ -26,44 +26,15 @@ def color_row(answer, guess):
     return colors
 
 def pre_filter(words, answer, pattern):
-    answer = answer.lower()
-    pattern = [c.upper() for c in pattern]
+    target = [c.upper() for c in pattern]  # Normalize the pattern (e.g., ['G', 'X', 'Y', 'X', 'G'])
 
-    # Count required letters and identify excluded letters
-    required = {}
-    excluded = set()
-    for i, p in enumerate(pattern):
-        letter = answer[i]
-        if p in ("G", "Y"):
-            required[letter] = required.get(letter, 0) + 1
-        else:  # X
-            # only exclude if this letter isn't needed elsewhere
-            if letter not in required:
-                excluded.add(letter)
+    def matches(word):
+        result = color_row(answer, word)  # Get the actual Wordle-style feedback for this guess
+        code = ['G' if c == 'GREEN' else 'Y' if c == 'YELLOW' else 'X' for c in result]
+        return code == target             # Keep only words that produce the desired feedback
 
-    filtered = []
-    for word in words:
-        w = word.lower()
-        skip = False
-        # position checks
-        for i, p in enumerate(pattern):
-            if p == "G" and w[i] != answer[i]:
-                skip = True
-                break
-            if p != "G" and w[i] == answer[i]:
-                skip = True
-                break
-        if skip:
-            continue
-        if any(ch in w for ch in excluded):
-            continue
-        for ch, cnt in required.items():
-            if w.count(ch) < cnt:
-                skip = True
-                break
-        if not skip:
-            filtered.append(word)
-    return filtered
+    return [word for word in words if matches(word)]
+
 
 
 def find_guess(answer, pattern, words):
