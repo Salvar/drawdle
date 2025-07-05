@@ -25,10 +25,51 @@ def color_row(answer, guess):
             answer_chars[idx] = None
     return colors
 
+def pre_filter(words, answer, pattern):
+    answer = answer.lower()
+    pattern = [c.upper() for c in pattern]
+
+    # Count required letters and identify excluded letters
+    required = {}
+    excluded = set()
+    for i, p in enumerate(pattern):
+        letter = answer[i]
+        if p in ("G", "Y"):
+            required[letter] = required.get(letter, 0) + 1
+        else:  # X
+            # only exclude if this letter isn't needed elsewhere
+            if letter not in required:
+                excluded.add(letter)
+
+    filtered = []
+    for word in words:
+        w = word.lower()
+        skip = False
+        # position checks
+        for i, p in enumerate(pattern):
+            if p == "G" and w[i] != answer[i]:
+                skip = True
+                break
+            if p != "G" and w[i] == answer[i]:
+                skip = True
+                break
+        if skip:
+            continue
+        if any(ch in w for ch in excluded):
+            continue
+        for ch, cnt in required.items():
+            if w.count(ch) < cnt:
+                skip = True
+                break
+        if not skip:
+            filtered.append(word)
+    return filtered
+
 
 def find_guess(answer, pattern, words):
     target = [c.upper() for c in pattern]
-    for word in words:
+    candidates = pre_filter(words, answer, target)
+    for word in candidates:
         res = color_row(answer, word)
         code = ['G' if c == 'GREEN' else 'Y' if c == 'YELLOW' else 'X' for c in res]
         if code == target:
