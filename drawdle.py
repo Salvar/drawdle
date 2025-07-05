@@ -1,5 +1,5 @@
 import argparse
-
+import random
 
 def load_words(filename):
     with open(filename, 'r', encoding='utf-8') as f:
@@ -29,20 +29,10 @@ def color_row(answer, guess):
 
     return colors
 
-def pre_filter(words, answer, pattern):
-    # Keep only words where color_row(word) == pattern
-    def matches(word):
-        return color_row(answer, word) == pattern
-
-    return [word for word in words if matches(word)]
-
 def find_guess(answer, pattern, words):
     target = [c.upper() for c in pattern]
-    candidates = pre_filter(words, answer, target)
-    for word in candidates:
-        if color_row(answer, word) == target:
-            return word
-    return None
+    candidates = [word for word in words if color_row(answer, word) == target]
+    return random.choice(candidates) if candidates else None
 
 def parse_pattern(text):
     mapping = {
