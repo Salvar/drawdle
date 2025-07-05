@@ -1,6 +1,6 @@
 # drawdle
 
-This repository contains a small utility for generating Wordle guesses that match a desired color pattern for a given answer.
+A small utility for generating Wordle guesses that match a desired color pattern for a given answer.
 
 ## drawdle.py
 
@@ -18,7 +18,6 @@ When run, the script prompts for up to six pattern rows. Each row is a five-char
 - `G` for green (correct letter, correct position)
 - `Y` for yellow/orange (correct letter, wrong position)
 - `X` for gray/dark (letter not present)
-
 
 Press Enter on an empty line to stop entering patterns. For every row provided, a possible guess is printed.
 
