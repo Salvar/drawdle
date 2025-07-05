@@ -6,47 +6,43 @@ def load_words(filename):
         words = [line.strip().lower() for line in f if line.strip() and len(line.strip()) == 5 and line.strip().isalpha()]
     return words
 
-
 def color_row(answer, guess):
+    # Returns pattern like ['G', 'Y', 'X', 'X', 'G']
     answer = answer.lower()
     guess = guess.lower()
-    colors = ["GRAY"] * len(guess)
+    colors = ['X'] * 5
     answer_chars = list(answer)
     guess_chars = list(guess)
-    for i in range(len(guess_chars)):
+
+    # First pass: Green
+    for i in range(5):
         if guess_chars[i] == answer_chars[i]:
-            colors[i] = "GREEN"
+            colors[i] = 'G'
             answer_chars[i] = None
             guess_chars[i] = None
-    for i in range(len(guess_chars)):
+
+    # Second pass: Yellow
+    for i in range(5):
         if guess_chars[i] is not None and guess_chars[i] in answer_chars:
-            colors[i] = "YELLOW"
-            idx = answer_chars.index(guess_chars[i])
-            answer_chars[idx] = None
+            colors[i] = 'Y'
+            answer_chars[answer_chars.index(guess_chars[i])] = None
+
     return colors
 
 def pre_filter(words, answer, pattern):
-    target = [c.upper() for c in pattern]  # Normalize the pattern (e.g., ['G', 'X', 'Y', 'X', 'G'])
-
+    # Keep only words where color_row(word) == pattern
     def matches(word):
-        result = color_row(answer, word)  # Get the actual Wordle-style feedback for this guess
-        code = ['G' if c == 'GREEN' else 'Y' if c == 'YELLOW' else 'X' for c in result]
-        return code == target             # Keep only words that produce the desired feedback
+        return color_row(answer, word) == pattern
 
     return [word for word in words if matches(word)]
-
-
 
 def find_guess(answer, pattern, words):
     target = [c.upper() for c in pattern]
     candidates = pre_filter(words, answer, target)
     for word in candidates:
-        res = color_row(answer, word)
-        code = ['G' if c == 'GREEN' else 'Y' if c == 'YELLOW' else 'X' for c in res]
-        if code == target:
+        if color_row(answer, word) == target:
             return word
     return None
-
 
 def parse_pattern(text):
     mapping = {
@@ -61,7 +57,6 @@ def parse_pattern(text):
     if len(text) == 5 and all(ch in mapping for ch in text):
         return [mapping[ch] for ch in text]
     raise ValueError("Pattern must be 5 characters or 5 space-separated codes")
-
 
 def main():
     parser = argparse.ArgumentParser(description="Find Wordle guesses that match given color patterns.")
